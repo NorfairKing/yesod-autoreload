@@ -1,3 +1,4 @@
+{-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 
@@ -21,6 +22,7 @@ module Yesod.AutoReload
   )
 where
 
+import Control.Concurrent
 import Control.Monad
 import Data.Text (Text)
 import Text.Julius
@@ -41,20 +43,26 @@ function connect (reloadAfterConnecting) {
   conn.onopen = function() {
     console.log("Listening for file changes.");
     if(reloadAfterConnecting) {
+      reloadAfterConnecting = false; // Just incase this is run twice
       location.reload();
     }
   }
   conn.onclose = function(e) {
-    // console.log("Connection closed, reloading.");
-    // console.log(e.data);
-    if (e.reason === "change") {
-      // console.log("Only reloading, not reconnecting.");
-      location.reload();
+    console.log("Connection closed using the following event, reloading.");
+    console.log(e);
+    if (e) {
+      console.log(e.reason);
+      if (e.reason && e.reason === "change") {
+        console.log("Only reloading, not reconnecting.");
+        location.reload();
+      } else {
+        console.log("Reconnecting before we reload.");
+        setTimeout(function() {
+          connect(true);
+        }, 1000);
+      }
     } else {
-      // console.log("Reconnecting before we reload.");
-      setTimeout(function() {
-        connect(true);
-      }, 1000);
+      console.log("Received something that didn't look like an event, not reloading.");
     }
   }
 }
@@ -82,4 +90,6 @@ getAutoReloadRWith waitingFunc = webSockets $ do
 getAutoReloadR :: (MonadHandler m, MonadUnliftIO m) => m ()
 getAutoReloadR =
   webSockets $
-    forever $ void $ receiveDataMessageE
+    forever $ do
+      sendPing ("Ping" :: Text)
+      liftIO $ threadDelay 1_000_000 -- 1 second
