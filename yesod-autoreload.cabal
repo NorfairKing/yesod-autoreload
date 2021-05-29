@@ -6,12 +6,13 @@ cabal-version: 1.12
 
 name:           yesod-autoreload
 version:        0.0.0.0
+synopsis:       Auto-reload a yesod app during development
 homepage:       https://github.com/NorfairKing/yesod-autoreload#readme
 bug-reports:    https://github.com/NorfairKing/yesod-autoreload/issues
 author:         Tom Sydney Kerckhove
 maintainer:     syd@cs-syd.eu
-copyright:      Copyright (c) 2020 Tom Sydney Kerckhove
-license:        AllRightsReserved
+copyright:      Copyright (c) 2020-2021 Tom Sydney Kerckhove
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 

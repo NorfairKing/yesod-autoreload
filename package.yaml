@@ -5,6 +5,7 @@ license:             MIT
 author:              "Tom Sydney Kerckhove"
 maintainer:          "syd@cs-syd.eu"
 copyright:           "Copyright (c) 2020-2021 Tom Sydney Kerckhove"
+synopsis:            Auto-reload a yesod app during development
 
 dependencies:
 - base >= 4.7 && < 5
