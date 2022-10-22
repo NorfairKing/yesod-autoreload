@@ -29,26 +29,8 @@
       pkgs = pkgsFor nixpkgs;
     in
     {
-      overlays = final: prev:
-        with final.haskell.lib;
-        {
-          haskellPackages =
-            prev.haskellPackages.override (
-              old:
-              {
-                overrides =
-                  final.lib.composeExtensions (old.overrides or (_: _: { })) (
-                    self: super: {
-                      yesod-autoreload =
-                        failOnAllWarnings (self.callPackage ./default.nix { });
-                    }
-                  );
-              }
-            );
-        };
-
-      packages.yesod-autoreload = pkgs.haskellPackages.yesod-autoreload;
-      packages.default = self.packages.${system}.yesod-autoreload;
+      overlays = import ./nix/overlay.nix;
+      packages.default = pkgs.haskellPackages.yesod-autoreload;
       checks =
         let
           backwardCompatibilityCheckFor = nixpkgs:
