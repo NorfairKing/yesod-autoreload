@@ -41,28 +41,28 @@ function connect (reloadAfterConnecting) {
   var uri = new URL("@{reloadWebsocketRoute}",document.baseURI).href.replace(/^http/i, "ws");
   var conn = new WebSocket(uri)
   conn.onopen = function() {
-    console.log("Listening for file changes.");
+    // console.log("Listening for file changes.");
     if(reloadAfterConnecting) {
       reloadAfterConnecting = false; // Just incase this is run twice
       location.reload();
     }
   }
   conn.onclose = function(e) {
-    console.log("Connection closed using the following event, reloading.");
-    console.log(e);
+    // console.log("Connection closed using the following event, reloading.");
+    // console.log(e);
     if (e) {
-      console.log(e.reason);
+      // console.log(e.reason);
       if (e.reason && e.reason === "change") {
-        console.log("Only reloading, not reconnecting.");
+        // console.log("Only reloading, not reconnecting.");
         location.reload();
       } else {
-        console.log("Reconnecting before we reload.");
+        // console.log("Reconnecting before we reload.");
         setTimeout(function() {
           connect(true);
         }, 1000);
       }
     } else {
-      console.log("Received something that didn't look like an event, not reloading.");
+      // console.log("Received something that didn't look like an event, not reloading.");
     }
   }
 }
