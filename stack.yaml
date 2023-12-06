@@ -1,7 +1,7 @@
-resolver: lts-19.6
+resolver: lts-21.22
 packages:
 - .
+system-ghc: true
 nix:
-  packages:
-  - zlib
-  - killall
+  enable: false
+with-hpack: hpack
